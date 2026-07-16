@@ -1,0 +1,57 @@
+body{
+    background: #f4f7fc;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper{
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar{
+    width: 260px;
+    background: #0d1b2a;
+}
+
+.sidebar .nav-link{
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 15px;
+    transition: .3s;
+}
+
+.sidebar .nav-link:hover{
+    background: #1b263b;
+    color: #fff;
+}
+
+.sidebar .nav-link.active{
+    background: #415a77;
+    color: #fff;
+}
+
+/* Content */
+.content{
+    flex: 1;
+    padding: 30px;
+}
+
+/* Card */
+.dashboard-card{
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+}
+
+/* Icon */
+.icon-box{
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+}

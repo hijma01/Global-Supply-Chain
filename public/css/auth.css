@@ -1,0 +1,140 @@
+:root {
+    --ink: #0B1B2B;
+    --paper: #F7F5F0;
+    --accent: #00B4A6;
+    --accent-soft: #CFF2EF;
+    --danger: #E5484D;
+    --text-muted: #7C8798;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #fff;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.brand-font {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.mono {
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+
+.auth-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.panel-form {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--paper);
+    border: 1px solid #E4E7EC;
+    border-radius: 16px;
+    padding: 2.25rem 2rem;
+}
+
+.brand-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+}
+
+.brand-mini .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+}
+
+.form-card h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+}
+
+.form-card p.subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.75rem;
+}
+
+.form-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #DDE2E8;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.92rem;
+}
+
+.form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.btn-primary {
+    background: var(--ink);
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+    width: 100%;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background: var(--accent);
+    color: var(--ink);
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.auth-switch a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+#alertBox {
+    display: none;
+}
