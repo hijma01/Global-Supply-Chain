@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -64,6 +65,14 @@ class AuthController extends Controller
             ]);
         }
 
+        Auth::login($pengguna);
+
+        session([
+            'id_user' => $pengguna->id,
+            'nama' => $pengguna->nama,
+            'peran' => $pengguna->peran,
+        ]);
+
         $token = $pengguna->createToken('token_akses')->plainTextToken;
 
         return response()->json([
@@ -71,15 +80,18 @@ class AuthController extends Controller
             'token' => $token,
         ]);
     }
-
+    
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Berhasil logout']);
-    }
+        if ($request->user()) {
+            $request->user()->currentAccessToken()?->delete();
+        }
 
-    public function profil(Request $request)
-    {
-        return response()->json($request->user());
+        session()->flush();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login');
     }
 }

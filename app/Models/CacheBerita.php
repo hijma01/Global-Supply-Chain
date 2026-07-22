@@ -9,7 +9,18 @@ class CacheBerita extends Model
     protected $table = 'cache_berita';
 
     protected $fillable = [
-        'judul', 'deskripsi', 'url', 'sumber', 'kategori',
-        'diterbitkan_pada', 'positive_score', 'negative_score', 'sentiment_label',
+        'judul',
+        'deskripsi',
+        'url',
+        'sumber',
+        'kategori',
+        'diterbitkan_pada',
+        'skor_positif',
+        'skor_negatif',
+        'label_sentimen',
+    ];
+
+    protected $casts = [
+        'diterbitkan_pada' => 'datetime',
     ];
 }

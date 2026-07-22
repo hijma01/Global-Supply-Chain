@@ -2,40 +2,92 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Negara;
 use App\Models\PerbandinganNegara;
-use Illuminate\Http\Request;
 
 class PerbandinganController extends Controller
 {
-    public function bandingkan(Request $request)
+    /**
+     * Menampilkan halaman perbandingan
+     */
+    public function index()
     {
-        $data = $request->validate([
-            'negara_a_id' => 'required|exists:negara,id',
-            'negara_b_id' => 'required|exists:negara,id',
-            'pengguna_id' => 'nullable|exists:pengguna,id',
-        ]);
+        $negara = Negara::orderBy('nama')->get();
 
-        $negaraA = Negara::with(['dataEkonomi', 'cacheCuaca', 'skorRisiko'])->findOrFail($data['negara_a_id']);
-        $negaraB = Negara::with(['dataEkonomi', 'cacheCuaca', 'skorRisiko'])->findOrFail($data['negara_b_id']);
-
-        PerbandinganNegara::create([
-            'pengguna_id' => $data['pengguna_id'] ?? null,
-            'negara_a_id' => $data['negara_a_id'],
-            'negara_b_id' => $data['negara_b_id'],
-            'dibandingkan_pada' => now(),
-        ]);
-
-        return response()->json([
-            'negara_a' => $negaraA,
-            'negara_b' => $negaraB,
+        return view('dashboard.perbandingan', [
+            'negara' => $negara,
+            'negaraA' => null,
+            'negaraB' => null,
         ]);
     }
 
+    /**
+     * Membandingkan dua negara
+     */
+    public function bandingkan(Request $request)
+    {
+        $request->validate([
+            'negara_a_id' => 'required|exists:negara,id',
+            'negara_b_id' => 'required|exists:negara,id|different:negara_a_id',
+        ]);
+
+        // Ambil data negara pertama
+        $negaraA = Negara::with([
+            'dataEkonomi',
+            'cacheCuaca',
+            'skorRisiko'
+        ])->findOrFail($request->negara_a_id);
+
+        // Ambil data negara kedua
+        $negaraB = Negara::with([
+            'dataEkonomi',
+            'cacheCuaca',
+            'skorRisiko'
+        ])->findOrFail($request->negara_b_id);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Simpan Riwayat Perbandingan
+        |--------------------------------------------------------------------------
+        | Jika pasangan negara sudah pernah dibandingkan,
+        | maka hanya update tanggal dibandingkan.
+        */
+
+        PerbandinganNegara::updateOrCreate(
+
+            [
+                'pengguna_id' => session('pengguna_id'),
+                'negara_a_id' => $request->negara_a_id,
+                'negara_b_id' => $request->negara_b_id,
+            ],
+
+            [
+                'dibandingkan_pada' => now(),
+            ]
+        );
+
+        $negara = Negara::orderBy('nama')->get();
+
+        return view('dashboard.perbandingan', [
+            'negara' => $negara,
+            'negaraA' => $negaraA,
+            'negaraB' => $negaraB,
+        ]);
+    }
+
+    /**
+     * Menampilkan riwayat perbandingan
+     */
     public function riwayat()
     {
-        return response()->json(
-            PerbandinganNegara::with(['negaraA', 'negaraB'])->latest()->get()
-        );
+        $riwayat = PerbandinganNegara::with([
+            'negaraA',
+            'negaraB'
+        ])
+        ->orderByDesc('dibandingkan_pada')
+        ->get();
+
+        return view('dashboard.riwayat_perbandingan', compact('riwayat'));
     }
 }

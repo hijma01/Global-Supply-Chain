@@ -37,6 +37,12 @@ class SyncEkonomi extends Command
 
             if (!$data) {
 
+                $this->newLine();
+
+                $this->error(
+                    "{$negara->nama} ({$negara->kode_negara}) gagal."
+                );
+
                 $gagal++;
 
                 $bar->advance();

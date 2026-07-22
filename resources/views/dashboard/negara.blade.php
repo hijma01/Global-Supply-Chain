@@ -4,27 +4,75 @@
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+<style>
+
+.flag-card{
+    height:260px;
+}
+
+.info-card{
+    height:120px;
+}
+
+.flag-card .card-body{
+    padding:0;
+    height:100%;
+    overflow:hidden;
+    border-radius:12px;
+}
+
+.info-card h2{
+    font-size:2rem;
+    margin:0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.flag-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.header-card{
+    background: linear-gradient(135deg,#0f766e,#14b8a6);
+    border-radius:18px;
+}
+
+.header-card h2{
+    color:#fff;
+}
+
+.header-card p{
+    color:rgba(255,255,255,.9);
+}
+
+</style>
+
 @endsection
 
 @section('content')
 
-<div class="container-fluid">
+<div class="card border-0 shadow-sm mb-4 header-card">
 
-    <div class="row mb-4">
+    <div class="card-body p-4">
 
-        <div class="col">
+            <h2 class="fw-bold mb-2">
+                Data Negara
+            </h2>
 
-            <h2>Data Negara</h2>
-
-            <p class="text-secondary">
-                Pilih negara untuk melihat informasi ekonomi, cuaca dan lokasi.
+            <p class="mb-0 text-light">
+                Pilih negara untuk melihat informasi ekonomi, cuaca, mata uang,
+                populasi, dan lokasi secara real-time.
             </p>
 
         </div>
 
     </div>
 
-    {{-- Pilih Negara --}}
+    <!-- Pilih Negara -->
 
     <div class="row mb-4">
 
@@ -36,7 +84,7 @@
 
             </label>
 
-            <select id="negaraSelect" class="form-select">
+            <select id="negaraSelect" class="form-select shadow-sm">
 
                 <option value="">-- Pilih Negara --</option>
 
@@ -46,36 +94,19 @@
 
     </div>
 
+    <div class="row mb-4">
 
-    {{-- Statistik --}}
+        <div class="col-lg-5">
 
-    <div class="row">
+            <div class="card shadow border-0 flag-card">
 
-        <div class="col-md-3 mb-3">
+                <div class="card-body p-2">
 
-            <div class="card bg-primary text-white shadow border-0">
-
-                <div class="card-body">
-
-                    <h6>GDP</h6>
-
-                    <h3 id="gdp">-</h3>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3 mb-3">
-
-            <div class="card bg-success text-white shadow border-0">
-
-                <div class="card-body">
-
-                    <h6>Inflasi</h6>
-
-                    <h3 id="inflasi">-</h3>
+                    <img
+                        id="bendera"
+                        src=""
+                        alt="Bendera Negara"
+                        style="visibility:hidden;">
 
                 </div>
 
@@ -83,31 +114,76 @@
 
         </div>
 
-        <div class="col-md-3 mb-3">
+        <!-- Statistik -->
+        <div class="col-lg-7">
 
-            <div class="card bg-warning shadow border-0">
+            <div class="row g-3">
 
-                <div class="card-body">
+                <!-- GDP -->
+                <div class="col-md-6">
 
-                    <h6>Populasi</h6>
+                    <div class="card bg-primary text-white shadow border-0 info-card">
 
-                    <h3 id="populasi">-</h3>
+                        <div class="card-body">
+
+                            <small>GDP</small>
+
+                            <h2 id="gdp">-</h2>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <!-- Inflasi -->
+                <div class="col-md-6">
 
-        </div>
+                    <div class="card bg-success text-white shadow border-0 info-card">
 
-        <div class="col-md-3 mb-3">
+                        <div class="card-body">
 
-            <div class="card bg-info text-white shadow border-0">
+                            <small>Inflasi</small>
 
-                <div class="card-body">
+                            <h2 id="inflasi">-</h2>
 
-                    <h6>Mata Uang</h6>
+                        </div>
 
-                    <h3 id="currency">-</h3>
+                    </div>
+
+                </div>
+
+                <!-- Populasi -->
+                <div class="col-md-6">
+
+                    <div class="card bg-warning shadow border-0 info-card">
+
+                        <div class="card-body">
+
+                            <small>Populasi</small>
+
+                            <h2 id="populasi">-</h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Mata Uang -->
+                <div class="col-md-6">
+
+                    <div class="card bg-info text-white shadow border-0 info-card">
+
+                        <div class="card-body">
+
+                            <small>Mata Uang</small>
+
+                            <h2 id="currency">-</h2>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -116,19 +192,29 @@
         </div>
 
     </div>
-
-
-    {{-- Cuaca --}}
+    <!-- Cuaca -->
 
     <div class="card shadow border-0 mt-4">
 
+        <div class="card-header bg-primary text-white">
+
+            Cuaca Saat Ini
+
+        </div>
+
         <div class="card-body text-center">
 
-            <h4>Cuaca Saat Ini</h4>
+            <h2 id="statusCuaca">
 
-            <h2 id="statusCuaca">-</h2>
+                -
 
-            <h3 id="suhu">-</h3>
+            </h2>
+
+            <h3 id="suhu">
+
+                -
+
+            </h3>
 
             <div class="row mt-4">
 
@@ -162,8 +248,7 @@
 
     </div>
 
-
-    {{-- Peta --}}
+    <!-- Peta -->
 
     <div class="card shadow border-0 mt-4">
 
@@ -173,38 +258,91 @@
 
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-0">
 
             <div id="map" style="height:500px;"></div>
-
+            
         </div>
 
     </div>
+
+    <div class="row mt-4">
+
+        <!-- GDP -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-graph-up-arrow me-2"></i>
+                    GDP Trend
+                </div>
+
+                <div class="card-body">
+                    <canvas id="gdpChart" height="120"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Inflasi -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow border-0">
+
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-bar-chart-line me-2"></i>
+                    Inflation Trend
+                </div>
+
+                <div class="card-body">
+                    <canvas id="inflasiChart" height="120"></canvas>
+                </div>
+
+            </div>
+        </div>
 
 </div>
 
 @endsection
 
-
 @section('script')
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
 
 const negaraSelect = document.getElementById('negaraSelect');
-let map = L.map('map').setView([0, 0], 2);
+
+let map = L.map('map').setView([0,0],2);
+
+let circle = null;
 
 L.tileLayer(
-    'https://tiles.openfreemap.org/styles/liberty/{z}/{x}/{y}.png',
-    {
-        attribution: '&copy; OpenFreeMap & OpenStreetMap contributors',
-        maxZoom: 19
-    }
-).addTo(map);
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+    attribution:'© OpenStreetMap contributors',
+    maxZoom:19
+}).addTo(map);
 
+// marker awal
 let marker = L.marker([0,0]).addTo(map);
 
+let gdpChart = null;
+let inflasiChart = null;
+
+function getWeatherIcon(risiko,hujan){
+
+    if(risiko=="tinggi"){
+        return "⛈";
+    }
+
+    if(hujan>0){
+        return "🌧";
+    }
+
+    return "☀";
+}
 
 // =======================
 // Daftar Negara
@@ -250,108 +388,145 @@ negaraSelect.addEventListener('change', function () {
     if(id == "") return;
 
     fetch('/api/negara/' + id)
-
     .then(response => response.json())
-
     .then(data => {
 
         console.log(data);
 
+        window.lat = parseFloat(data.lintang);
+        window.lng = parseFloat(data.bujur);
+        window.namaNegara = data.nama;
+
+        let bendera = document.getElementById("bendera");
+
+        bendera.src = data.url_bendera;
+
+        bendera.style.visibility = "visible";
+
         document.getElementById("populasi").innerHTML =
             data.populasi
-            ? Number(data.populasi).toLocaleString()
+            ? Number(data.populasi).toLocaleString('id-ID')
             : "-";
 
         document.getElementById("currency").innerHTML =
             data.nama_mata_uang ?? "-";
 
-         marker.setLatLng([
-        data.lintang,
-        data.bujur
-        ]);
 
-        map.setView([
-            data.lintang,
-            data.bujur
-        ], 5);
+        if(data.data_ekonomi && data.data_ekonomi.length > 0){
 
-        marker.bindPopup(data.nama).openPopup();
+            let ekonomi = data.data_ekonomi[0];
 
+            document.getElementById("gdp").innerHTML =
+                Number(ekonomi.pdb).toLocaleString('id-ID');
 
-    })
+            document.getElementById("inflasi").innerHTML =
+                ekonomi.tingkat_inflasi + " %";
 
-    .catch(error => {
+        }else{
 
-        console.log(error);
+            document.getElementById("gdp").innerHTML = "-";
+            document.getElementById("inflasi").innerHTML = "-";
 
-    });
+        }
 
-// =======================
-// Data Negara
-// =======================
+        let labels = [];
+        let gdpData = [];
+        let inflasiData = [];
 
-fetch('/api/negara/'+id)
+        data.data_ekonomi.reverse().forEach(item => {
 
-.then(res=>res.json())
+            labels.push(item.tahun ?? item.created_at.substring(0,10));
 
-.then(data=>{
+            gdpData.push(item.pdb);
 
-document.getElementById('namaNegara').innerHTML=data.nama;
+            inflasiData.push(item.tingkat_inflasi);
 
-document.getElementById('kodeNegara').innerHTML=data.kode_negara;
+        });
+        if(gdpChart){
+            gdpChart.destroy();
+        }
 
-document.getElementById('ibukota').innerHTML=data.ibu_kota;
+        gdpChart = new Chart(document.getElementById('gdpChart'),{
 
-document.getElementById('wilayah').innerHTML=data.wilayah;
+            type:'line',
 
-document.getElementById('subWilayah').innerHTML=data.sub_wilayah;
+            data:{
 
-document.getElementById('currency').innerHTML=data.nama_mata_uang;
+                labels:labels,
 
-document.getElementById('populasi').innerHTML=
-Number(data.populasi).toLocaleString();
+                datasets:[{
 
+                    label:'GDP',
 
-let lat=parseFloat(data.lintang);
+                    data:gdpData,
 
-let lng=parseFloat(data.bujur);
+                    borderColor:'#2563eb',
 
-if(marker){
+                    backgroundColor:'rgba(37,99,235,.2)',
 
-map.removeLayer(marker);
+                    fill:true,
 
-}
+                    tension:.4
 
-marker=L.marker([lat,lng]).addTo(map);
+                }]
+            },
 
-marker.bindPopup(data.nama).openPopup();
+            options:{
 
-map.setView([lat,lng],5);
+                responsive:true,
 
-});
+                plugins:{
+                    legend:{
+                        display:true
+                    }
+                }
 
+            }
 
-// =======================
-// Data Ekonomi Real-time
-// =======================
+        });
 
-fetch('/api/data-ekonomi/realtime/' + id)
-.then(response => response.json())
-.then(res => {
+        if(inflasiChart){
+            inflasiChart.destroy();
+        }
 
-    console.log(res);
+        inflasiChart = new Chart(document.getElementById('inflasiChart'),{
 
-    if(!res.success){
-        document.getElementById("gdp").innerHTML = "-";
-        document.getElementById("inflasi").innerHTML = "-";
-        return;
-    }
+            type:'line',
 
-    document.getElementById("gdp").innerHTML =
-        Number(res.data_ekonomi.pdb).toLocaleString();
+            data:{
 
-    document.getElementById("inflasi").innerHTML =
-        res.data_ekonomi.tingkat_inflasi + " %";
+                labels:labels,
+
+                datasets:[{
+
+                    label:'Inflasi',
+
+                    data:inflasiData,
+
+                    borderColor:'#16a34a',
+
+                    backgroundColor:'rgba(22,163,74,.2)',
+
+                    fill:true,
+
+                    tension:.4
+
+                }]
+            },
+
+            options:{
+
+                responsive:true,
+
+                plugins:{
+                    legend:{
+                        display:true
+                    }
+                }
+
+            }
+
+        });
 
 })
 .catch(error => console.log(error));
@@ -396,6 +571,47 @@ fetch('/api/cuaca/realtime/' + id)
         res.cuaca.kecepatan_angin + " km/jam";
     document.getElementById("badai").innerHTML = 
         res.cuaca.tingkat_risiko_badai;
+
+    // icon cuaca
+    let icon = L.divIcon({
+
+        html: `
+        <div style="font-size:35px">
+            ${getWeatherIcon(
+                res.cuaca.tingkat_risiko_badai,
+                res.cuaca.curah_hujan
+            )}
+        </div>
+        `,
+
+        className: "",
+
+        iconSize:[40,40]
+
+    });
+
+    // marker baru
+    marker = L.marker(
+        [window.lat,window.lng],
+        {
+            icon:icon
+        }
+    ).addTo(map);
+
+    // zoom
+    map.setView(
+        [window.lat,window.lng],
+        5
+    );
+
+    // popup
+    marker.bindPopup(`
+    <b>${window.namaNegara}</b><br>
+    🌡 Suhu : ${res.cuaca.suhu} °C<br>
+    🌧 Curah Hujan : ${res.cuaca.curah_hujan} mm<br>
+    💨 Angin : ${res.cuaca.kecepatan_angin} km/jam<br>
+    ⚠ Risiko : ${res.cuaca.tingkat_risiko_badai}
+    `).openPopup();
 
 })
 .catch(error => console.log(error));

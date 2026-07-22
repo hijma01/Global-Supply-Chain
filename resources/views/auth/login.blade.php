@@ -68,13 +68,15 @@
             // Simpan token dan data pengguna untuk dipakai di halaman dashboard
             localStorage.setItem('token', data.token);
             localStorage.setItem('pengguna', JSON.stringify(data.pengguna));
+            localStorage.setItem('id_user', data.pengguna.id);
 
             // Arahkan sesuai peran (admin atau user biasa)
             if (data.pengguna.peran === 'admin') {
-                window.location.href = '/admin/dashboard';
+                window.location.href = "{{ route('admin.dashboard') }}";
             } else {
-                window.location.href = '/dashboard';
+                window.location.href = "{{ route('dashboard') }}";
             }
+            
         } catch (error) {
             alertBox.textContent = error.message;
             alertBox.style.display = 'block';

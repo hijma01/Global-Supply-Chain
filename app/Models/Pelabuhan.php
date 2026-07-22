@@ -13,6 +13,13 @@ class Pelabuhan extends Model
         'ukuran_pelabuhan', 'tipe_pelabuhan',
     ];
 
+    protected $casts = [
+
+        'lintang'=>'float',
+        'bujur'=>'float',
+
+    ];
+
     public function negara()
     {
         return $this->belongsTo(Negara::class, 'negara_id');

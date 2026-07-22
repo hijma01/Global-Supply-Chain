@@ -34,6 +34,15 @@ class RisikoController extends Controller
         return response()->json(SkorRisiko::with('negara')->latest('dihitung_pada')->get());
     }
 
+    public function dashboard()
+    {
+        $risiko = SkorRisiko::with('negara')
+            ->latest('dihitung_pada')
+            ->get();
+
+        return view('dashboard.risiko', compact('risiko'));
+    }
+
     public function show($negaraId)
     {
         $skor = SkorRisiko::with('negara')

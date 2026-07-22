@@ -9,61 +9,83 @@ class WorldBankService
 {
     protected string $baseUrl = 'https://api.worldbank.org/v2';
 
-    /**
-     * Mengambil data ekonomi terbaru suatu negara.
-     *
-     * @param string $kodeNegara ISO Alpha-2 (ID, CN, US, JP, dll)
-     * @return array|null
-     */
     public function ambilDataEkonomi(string $kodeNegara): ?array
     {
         try {
 
+            $pdb = $this->ambilIndikator($kodeNegara,'NY.GDP.MKTP.CD');
+            $inflasi = $this->ambilIndikator($kodeNegara,'FP.CPI.TOTL.ZG');
+            $ekspor = $this->ambilIndikator($kodeNegara,'NE.EXP.GNFS.CD');
+            $impor = $this->ambilIndikator($kodeNegara,'NE.IMP.GNFS.CD');
+
+            // minimal ada satu data
+            if (
+                is_null($pdb) &&
+                is_null($inflasi) &&
+                is_null($ekspor) &&
+                is_null($impor)
+            ) {
+                return null;
+            }
+
             return [
-                'pdb' => $this->ambilIndikator($kodeNegara, 'NY.GDP.MKTP.CD'),
-                'tingkat_inflasi' => $this->ambilIndikator($kodeNegara, 'FP.CPI.TOTL.ZG'),
-                'nilai_ekspor' => $this->ambilIndikator($kodeNegara, 'NE.EXP.GNFS.CD'),
-                'nilai_impor' => $this->ambilIndikator($kodeNegara, 'NE.IMP.GNFS.CD'),
-                'tahun' => date('Y'),
+
+                'pdb' => $pdb,
+
+                'tingkat_inflasi' => $inflasi,
+
+                'nilai_ekspor' => $ekspor,
+
+                'nilai_impor' => $impor,
+
+                'tahun' => now()->year,
+
             ];
 
         } catch (\Throwable $e) {
 
-            Log::error('WorldBank API Error', [
-                'country' => $kodeNegara,
-                'message' => $e->getMessage(),
-            ]);
+            Log::error($e->getMessage());
 
             return null;
         }
     }
 
-    /**
-     * Mengambil nilai indikator terbaru.
-     */
-    private function ambilIndikator(string $kodeNegara, string $indikator): ?float
+    private function ambilIndikator(string $kodeNegara,string $indikator): ?float
     {
-        $url = "{$this->baseUrl}/country/{$kodeNegara}/indicator/{$indikator}";
+        $response = Http::timeout(30)->retry(3,1000)->get(
 
-        $response = Http::timeout(30)->get($url, [
-            'format' => 'json',
-            'mrnev' => 1,
-        ]);
+            "{$this->baseUrl}/country/{$kodeNegara}/indicator/{$indikator}",
 
-        if (!$response->successful()) {
+            [
+
+                'format'=>'json',
+
+                'per_page'=>60,
+
+            ]
+
+        );
+
+        if(!$response->successful()){
+
             return null;
+
         }
 
         $json = $response->json();
 
-        if (!isset($json[1]) || !is_array($json[1])) {
+        if(!isset($json[1])){
+
             return null;
+
         }
 
-        foreach ($json[1] as $item) {
+        foreach($json[1] as $row){
 
-            if (!empty($item['value'])) {
-                return (float) $item['value'];
+            if(isset($row['value']) && $row['value'] !== null){
+
+                return (float)$row['value'];
+
             }
 
         }

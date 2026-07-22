@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\NilaiTukar;
 use App\Models\RiwayatNilaiTukar;
+use App\Models\Negara;
 use App\Services\FrankfurterService;
 use Illuminate\Http\Request;
 
@@ -61,22 +62,22 @@ class NilaiTukarController extends Controller
         return response()->json($riwayat, 201);
     }
 
-    public function realtime($id, FrankfurterService $service)
+   public function realtime($id, FrankfurterService $service)
     {
-        $negara = Negara::findOrFail($id);
+        $negara = \App\Models\Negara::findOrFail($id);
 
-        if (!$negara->kode_mata_uang) {
+        if (empty($negara->kode_mata_uang)) {
 
             return response()->json([
                 'success' => false,
                 'message' => 'Kode mata uang tidak tersedia.'
-            ],404);
+            ], 404);
 
         }
 
         $kurs = $service->ambilKurs(
             'USD',
-            $negara->kode_mata_uang
+            strtoupper($negara->kode_mata_uang)
         );
 
         if (!$kurs) {
@@ -84,7 +85,7 @@ class NilaiTukarController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mengambil data kurs.'
-            ],500);
+            ], 500);
 
         }
 
@@ -94,7 +95,17 @@ class NilaiTukarController extends Controller
 
             'negara' => $negara->nama,
 
-            'kurs' => $kurs
+            'nilai_tukar' => [
+
+                'mata_uang_dasar'  => $kurs['mata_uang_dasar'],
+
+                'mata_uang_tujuan' => $kurs['mata_uang_tujuan'],
+
+                'nilai_kurs'       => $kurs['nilai_kurs'],
+
+                'tanggal'          => $kurs['tanggal'],
+
+            ]
 
         ]);
     }

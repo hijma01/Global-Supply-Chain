@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Negara;
 use App\Models\DataEkonomiNegara;
-use App\Services\WorldBankService;
 use Illuminate\Http\Request;
 
 class NegaraController extends Controller
@@ -101,26 +100,6 @@ class NegaraController extends Controller
     {
         DataEkonomiNegara::findOrFail($id)->delete();
         return response()->json(['message' => 'Data ekonomi berhasil dihapus']);
-    }
-
-    public function dataEkonomiRealtime($id, WorldBankService $service)
-    {
-        $negara = Negara::findOrFail($id);
-
-        $dataEkonomi = $service->ambilDataEkonomi($negara->kode_negara);
-
-        if (!$dataEkonomi) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data ekonomi tidak tersedia.'
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'negara' => $negara->nama,
-            'data_ekonomi' => $dataEkonomi
-        ]);
     }
 
     public function dataPeta($id)

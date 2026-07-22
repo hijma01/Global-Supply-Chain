@@ -34,7 +34,6 @@ Route::put('/negara/{id}', [NegaraController::class, 'update']);
 Route::delete('/negara/{id}', [NegaraController::class, 'destroy']);
 
 Route::get('/data-ekonomi', [NegaraController::class, 'dataEkonomiIndex']);
-Route::get('/data-ekonomi/realtime/{id}', [NegaraController::class, 'dataEkonomiRealtime']);
 Route::get('/data-ekonomi/{id}', [NegaraController::class, 'dataEkonomiShow']);
 Route::post('/data-ekonomi', [NegaraController::class, 'dataEkonomiStore']);
 Route::put('/data-ekonomi/{id}', [NegaraController::class, 'dataEkonomiUpdate']);
@@ -77,6 +76,7 @@ Route::delete('/kata-negatif/{id}', [BeritaController::class, 'kataNegatifDestro
 
 
 Route::get('/pelabuhan', [PelabuhanController::class, 'index']);
+Route::get('/pelabuhan/search',[PelabuhanController::class, 'search']);
 Route::get('/pelabuhan/{id}', [PelabuhanController::class, 'show']);
 Route::post('/pelabuhan', [PelabuhanController::class, 'store']);
 Route::put('/pelabuhan/{id}', [PelabuhanController::class, 'update']);

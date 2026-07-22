@@ -8,16 +8,12 @@ use Illuminate\Support\Facades\Log;
 class FrankfurterService
 {
     /**
-     * Base URL Frankfurter API
+     * Base URL Frankfurter API v1
      */
-    protected string $baseUrl = 'https://api.frankfurter.app';
+    protected string $baseUrl = 'https://api.frankfurter.dev/v1';
 
     /**
      * Mengambil nilai tukar secara real-time.
-     *
-     * @param string $from
-     * @param string $to
-     * @return array|null
      */
     public function ambilKurs(string $from, string $to): ?array
     {
@@ -43,15 +39,18 @@ class FrankfurterService
             $response = Http::timeout(20)
                 ->acceptJson()
                 ->get($this->baseUrl . '/latest', [
-                    'from' => $from,
-                    'to'   => $to,
+                    'base'    => $from,
+                    'symbols' => $to,
                 ]);
 
             if (!$response->successful()) {
 
                 Log::error('Frankfurter API gagal.', [
+                    'url' => $this->baseUrl . '/latest',
+                    'from' => $from,
+                    'to' => $to,
                     'status' => $response->status(),
-                    'body'   => $response->body(),
+                    'body' => $response->body(),
                 ]);
 
                 return null;
@@ -59,18 +58,9 @@ class FrankfurterService
 
             $data = $response->json();
 
-            if (!isset($data['rates'])) {
+            if (!isset($data['rates'][$to])) {
 
-                Log::warning('Response tidak memiliki rates.', [
-                    'response' => $data,
-                ]);
-
-                return null;
-            }
-
-            if (!array_key_exists($to, $data['rates'])) {
-
-                Log::warning('Kode mata uang tidak ditemukan.', [
+                Log::warning('Mata uang tidak ditemukan', [
                     'from' => $from,
                     'to' => $to,
                     'response' => $data,
@@ -81,19 +71,19 @@ class FrankfurterService
 
             return [
 
-                'mata_uang_dasar' => $from,
+                'mata_uang_dasar'  => $from,
 
                 'mata_uang_tujuan' => $to,
 
-                'nilai_kurs' => $data['rates'][$to],
+                'nilai_kurs'       => $data['rates'][$to],
 
-                'tanggal' => $data['date'] ?? now()->toDateString(),
+                'tanggal'          => $data['date'] ?? now()->toDateString(),
 
             ];
 
         } catch (\Throwable $e) {
 
-            Log::error('Frankfurter Error : ' . $e->getMessage());
+            Log::error('Frankfurter Error : '.$e->getMessage());
 
             return null;
         }

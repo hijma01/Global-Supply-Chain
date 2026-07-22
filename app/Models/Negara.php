@@ -29,6 +29,22 @@ class Negara extends Model
         return $this->hasMany(SkorRisiko::class, 'negara_id');
     }
 
+    // Tambahan
+    public function ekonomiTerbaru()
+    {
+        return $this->hasOne(DataEkonomiNegara::class, 'negara_id')->latestOfMany();
+    }
+
+    public function cuacaTerbaru()
+    {
+        return $this->hasOne(CacheCuaca::class, 'negara_id')->latestOfMany();
+    }
+
+    public function risikoTerbaru()
+    {
+        return $this->hasOne(SkorRisiko::class, 'negara_id')->latestOfMany();
+    }
+
     public function pelabuhan()
     {
         return $this->hasMany(Pelabuhan::class, 'negara_id');
