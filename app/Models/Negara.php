@@ -54,4 +54,9 @@ class Negara extends Model
     {
         return $this->hasMany(DaftarPantauan::class, 'negara_id');
     }
+
+    public function riwayatEkonomi()
+    {
+        return $this->hasMany(RiwayatDataEkonomi::class, 'negara_id');
+    }
 }

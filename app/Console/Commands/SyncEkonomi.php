@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\DataEkonomiNegara;
 use App\Models\Negara;
+use App\Models\RiwayatDataEkonomi;
 use App\Services\WorldBankService;
 use Illuminate\Console\Command;
 
@@ -64,6 +65,18 @@ class SyncEkonomi extends Command
                     'nilai_impor' => $data['nilai_impor']
                 ]
 
+            );
+            RiwayatDataEkonomi::updateOrCreate(
+                [
+                    'negara_id' => $negara->id,
+                    'tanggal' => now()->toDateString()
+                ],
+                [
+                    'pdb' => $data['pdb'],
+                    'tingkat_inflasi' => $data['tingkat_inflasi'],
+                    'nilai_ekspor' => $data['nilai_ekspor'],
+                    'nilai_impor' => $data['nilai_impor']
+                ]
             );
 
             $berhasil++;

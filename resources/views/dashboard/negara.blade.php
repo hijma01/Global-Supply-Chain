@@ -433,9 +433,17 @@ negaraSelect.addEventListener('change', function () {
         let gdpData = [];
         let inflasiData = [];
 
-        data.data_ekonomi.reverse().forEach(item => {
+        // Ambil data riwayat 7 hari terakhir
+        let riwayat = [...(data.riwayat_ekonomi || [])].reverse();
 
-            labels.push(item.tahun ?? item.created_at.substring(0,10));
+        riwayat.forEach(item => {
+
+            labels.push(
+                new Date(item.tanggal).toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'short'
+                })
+            );
 
             gdpData.push(item.pdb);
 

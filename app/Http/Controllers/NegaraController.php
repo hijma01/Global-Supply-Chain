@@ -20,6 +20,10 @@ class NegaraController extends Controller
             'dataEkonomi' => function ($query) {
                 $query->latest('tahun');
             },
+            'riwayatEkonomi' => function ($query) {
+                $query->latest('tanggal')
+                    ->take(7);
+            },
             'cacheCuaca' => function ($query) {
                 $query->latest('dicatat_pada');
             },
